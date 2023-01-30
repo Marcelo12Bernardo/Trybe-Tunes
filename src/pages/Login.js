@@ -6,8 +6,10 @@ import { createUser } from '../services/userAPI';
 class Login extends React.Component {
   state = {
     name: '',
-    loading: false,
+    btnActivate: false,
   };
+  // Criar serviço de validação do campo
+  // Usar na page search
 
   handleChange = ({ target: { name, value } }) => {
     this.setState({
@@ -17,7 +19,7 @@ class Login extends React.Component {
 
   handleSubmitBtn = (user) => {
     const { history } = this.props;
-    this.setState({ loading: true }, async () => {
+    this.setState({ btnActivate: true }, async () => {
       if (user) {
         await createUser({ name: user });
         return history.push('/search');
@@ -26,7 +28,7 @@ class Login extends React.Component {
   };
 
   render() {
-    const { name, loading } = this.state;
+    const { name, btnActivate } = this.state;
     const minCharacter = 3;
 
     return (
@@ -45,7 +47,7 @@ class Login extends React.Component {
         >
           Entrar
         </button>
-        { loading && <Carregando /> }
+        { btnActivate && <Carregando /> }
       </div>
     );
   }
