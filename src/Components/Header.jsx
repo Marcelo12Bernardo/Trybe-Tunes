@@ -26,7 +26,7 @@ class Header extends React.Component {
     const { userName, loading } = this.state;
     return (
       <header data-testid="header-component">
-        <section className="user-name">
+        <section>
           {
             !loading
               ? (
@@ -37,7 +37,7 @@ class Header extends React.Component {
               : <Carregando />
           }
         </section>
-        <section className="links">
+        <section>
           <Link to="/search" data-testid="link-to-search">Pesquisa</Link>
           <Link to="/favorites" data-testid="link-to-favorites">Favoritas</Link>
           <Link to="/profile" data-testid="link-to-profile">Perfil</Link>

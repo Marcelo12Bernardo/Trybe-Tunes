@@ -30,14 +30,13 @@ class Search extends React.Component {
     const minCharacter = 2;
 
     return (
-      <div data-testid="page-search" id="page-search">
+      <div data-testid="page-search">
         <h3>Page Search</h3>
         <Header />
         <section>
           <input
             type="text"
             name="name"
-            id="search-artist-input"
             data-testid="search-artist-input"
             onChange={ this.handleChange }
           />

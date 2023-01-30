@@ -17,11 +17,11 @@ class Login extends React.Component {
     });
   };
 
-  handleSubmitBtn = (user) => {
+  handleSubmitBtn = (userName) => {
     const { history } = this.props;
     this.setState({ btnActivate: true }, async () => {
-      if (user) {
-        await createUser({ name: user });
+      if (userName) {
+        await createUser({ name: userName });
         return history.push('/search');
       }
     });
