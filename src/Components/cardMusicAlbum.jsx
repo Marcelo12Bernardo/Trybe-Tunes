@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { addSong, getFavoriteSongs } from '../services/favoriteSongsAPI';
+import { addSong, getFavoriteSongs, removeSong } from '../services/favoriteSongsAPI';
 import Carregando from './Carregando';
 
 class cardMusicAlbum extends React.Component {
@@ -21,6 +21,9 @@ class cardMusicAlbum extends React.Component {
       if (checked) {
         await addSong(track);
         this.setState({ isChecked: true });
+      } else {
+        await removeSong(track);
+        this.setState({ isChecked: false });
       }
       this.setState({ isLoading: false });
     });
