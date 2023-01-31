@@ -1,34 +1,45 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
+import searchAlbumsAPI from '../services/searchAlbumsAPI';
 import Header from '../Components/Header';
 import Carregando from '../Components/Carregando';
 
 class Search extends React.Component {
   state = {
-    name: '',
-    btnActivate: false,
+    searchQuery: '',
+    noResults: false,
+    albums: [],
+    isLoading: false,
+    artistName: '',
   };
 
-  handleChange = ({ target: { name, value } }) => {
-    this.setState({
-      [name]: value,
-    });
+  handleInputChange = ({ target: { name, value } }) => {
+    this.setState({ [name]: value });
   };
 
-  handleSubmitBtn = (user) => {
-    const { history } = this.props;
-    this.setState({ btnActivate: true }, async () => {
-      if (user) {
-        await createUser({ name: user });
-        return history.push('/search');
-      }
-    });
+  searchAlbum = (artist) => {
+    this.setState(
+      {
+        searchQuery: '',
+        isLoading: true,
+        artistName: artist,
+      },
+
+      async () => {
+        const albums = await searchAlbumsAPI(artist);
+        this.setState({ albums, isLoading: false });
+        if (albums.length === 0) {
+          this.setState({ noResults: true });
+        }
+      },
+    );
   };
 
   render() {
-    const { name, btnActivate } = this.state;
-    const minCharacter = 2;
-
+    const { searchQuery, noResults, albums, isLoading, artistName } = this.state;
+    const minCharCount = 2;
+    if (noResults) return <h1>Nenhum álbum foi encontrado</h1>;
+    if (isLoading) return <Carregando />;
     return (
       <div data-testid="page-search">
         <h3>Page Search</h3>
@@ -36,19 +47,32 @@ class Search extends React.Component {
         <section>
           <input
             type="text"
-            name="name"
+            name="searchQuery"
+            value={ searchQuery }
             data-testid="search-artist-input"
-            onChange={ this.handleChange }
+            onChange={ this.handleInputChange }
           />
           <button
             type="button"
             data-testid="search-artist-button"
-            disabled={ name.length < minCharacter }
-            onClick={ () => this.handleSubmitBtn(name) }
+            disabled={ searchQuery.length < minCharCount }
+            onClick={ () => this.searchAlbum(searchQuery) }
           >
-            Pesquisar
+            Search
           </button>
-          { btnActivate && <Carregando /> }
+          {albums.length >= 1 ? <h1>{`Resultado de álbuns de: ${artistName}`}</h1> : null}
+          {albums.map((album, index) => (
+            <div key={ index }>
+              <img src={ album.artworkUrl100 } alt="" />
+              <Link
+                data-testid={ `link-to-album-${album.collectionId}` }
+                to={ `/album/${album.collectionId}` }
+              >
+                {album.collectionName}
+              </Link>
+            </div>
+          ))}
+
         </section>
       </div>
     );
@@ -57,8 +81,14 @@ class Search extends React.Component {
 
 export default Search;
 
-Search.propTypes = {
-  history: PropTypes.shape({
-    push: PropTypes.func,
-  }),
-}.isRequired;
+/* Criar um componemte Album
+ * Fazer um map e carregar o componemte
+ * Refatorar codigo
+ * Seguir dica de nomes semanticos
+*/
+
+// Search.propTypes = {
+//   history: PropTypes.shape({
+//     push: PropTypes.func,
+//   }),
+// }.isRequired;
