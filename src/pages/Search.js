@@ -38,8 +38,13 @@ class Search extends React.Component {
   render() {
     const { searchQuery, noResults, albums, isLoading, artistName } = this.state;
     const minCharCount = 2;
-    if (noResults) return <h1>Nenhum álbum foi encontrado</h1>;
-    if (isLoading) return <Carregando />;
+
+    if (isLoading) {
+      return <Carregando />;
+    } if (noResults) {
+      return <h1>Nenhum álbum foi encontrado</h1>;
+    }
+
     return (
       <div data-testid="page-search">
         <h3>Page Search</h3>
@@ -60,7 +65,9 @@ class Search extends React.Component {
           >
             Search
           </button>
-          {albums.length >= 1 ? <h1>{`Resultado de álbuns de: ${artistName}`}</h1> : null}
+          {albums.length >= 1 ? (
+            <h1>{`Resultado de álbuns de: ${artistName}`}</h1>
+          ) : null}
           {albums.map((album, index) => (
             <div key={ index }>
               <img src={ album.artworkUrl100 } alt="" />
@@ -72,7 +79,6 @@ class Search extends React.Component {
               </Link>
             </div>
           ))}
-
         </section>
       </div>
     );

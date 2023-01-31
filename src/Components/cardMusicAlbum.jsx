@@ -17,13 +17,16 @@ class cardMusicAlbum extends React.Component {
 
   favoriteSong = ({ target: { checked } }) => {
     this.setState({ isLoading: true }, async () => {
-      const { track } = this.props;
+      const { track, handleFavoriteRemove } = this.props;
       if (checked) {
         await addSong(track);
         this.setState({ isChecked: true });
       } else {
         await removeSong(track);
         this.setState({ isChecked: false });
+      }
+      if (handleFavoriteRemove) {
+        handleFavoriteRemove(track.trackId);
       }
       this.setState({ isLoading: false });
     });
@@ -77,4 +80,5 @@ cardMusicAlbum.propTypes = {
     trackName: PropTypes.string,
     previewUrl: PropTypes.string,
   }).isRequired,
+  handleFavoriteRemove: PropTypes.func.isRequired,
 };
